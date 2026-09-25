@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeoQuizzy</title>
+    <link rel="stylesheet" href="../node_modules/remixicon/fonts/remixicon.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <aside class="sidebar" id="main-sidebar">
+        <div class="sidebar-top">
+          <button class="sidebar-btn active" data-page="home" title="Главная">
+            <i class="ri-home-5-line ri-xl"></i>
+          </button>
+          <button class="sidebar-btn" data-page="explore" title="Обзор">
+            <i class="ri-globe-line ri-xl"></i>
+          </button>
+          <button class="sidebar-btn" data-page="cloud" title="Облако">
+            <i class="ri-cloud-line ri-xl"></i>
+          </button>
+        </div>
+        <div class="sidebar-bottom">
+          <button class="sidebar-btn" data-page="account" title="Аккаунт">
+            <i class="ri-user-line ri-xl"></i>
+          </button>
+          <button class="sidebar-btn" data-page="settings" title="Настройки">
+            <i class="ri-settings-3-line ri-xl"></i>
+          </button>
+        </div>
+      </aside>
+
+      <div id="main-wrapper">
+        <section class="page active" data-page="home">
+          <div id="home">
+            <i class="ri-home-5-line ri-xl"></i>
+            <h1>Добрый день, Пользователь!</h1>
+          </div>
+
+          <div id="menu-bar">
+            <button class="icon" type="button" aria-label="Создать новый элемент">
+              <i class="ri-add-large-line ri-lg"></i>
+            </button>
+            <button class="icon" type="button" aria-label="Поиск">
+              <i class="ri-search-line ri-lg"></i>
+            </button>
+
+            <div class="options">
+              <button class="accent" type="button">Все</button>
+              <button class="icon" type="button" aria-label="Локальные файлы">
+                <i class="ri-computer-line ri-lg"></i>
+              </button>
+              <button class="icon" type="button" aria-label="Файлы в облаке">
+                <i class="ri-cloud-line ri-lg"></i>
+              </button>
+            </div>
+          </div>
+
+          <div id="recent-grid">
+            <div class="test-card" data-title="Контрольная по физике">
+              <div class="card-menu" role="menu" aria-label="Card actions">
+                <button class="menu-action" type="button" data-action="rename">Переименовать</button>
+                <button class="menu-action" type="button" data-action="password">Защитить паролем</button>
+                <button class="menu-action" type="button" data-action="duplicate">Дублировать</button>
+                <button class="menu-action danger" type="button" data-action="delete">Удалить</button>
+              </div>
+              <div class="card-badge badge-nqtx"><i class="ri-cloud-off-line"></i></div>
+              <div class="card-info">
+                <h3 class="test-title">Контрольная по физике</h3>
+                <p class="test-meta">Offline</p>
+              </div>
+            </div>
+
+            <div class="test-card" data-title="Тест на знание JavaScript">
+              <div class="card-menu" role="menu" aria-label="Card actions">
+                <button class="menu-action" type="button" data-action="rename">Переименовать</button>
+                <button class="menu-action" type="button" data-action="password">Защитить паролем</button>
+                <button class="menu-action" type="button" data-action="duplicate">Дублировать</button>
+                <button class="menu-action danger" type="button" data-action="delete">Удалить</button>
+              </div>
+              <div class="card-badge badge-cloud"><i class="ri-cloud-line"></i></div>
+              <div class="card-info">
+                <h3 class="test-title">Тест на знание JavaScript</h3>
+                <p class="test-meta"><i class="ri-info-card-line"></i> 123-456 | <i class="ri-user-line"></i> Me</p>
+              </div>
+            </div>
+
+            <div class="test-card" data-title="Информатика, параграф 1 - 3">
+              <div class="card-menu" role="menu" aria-label="Card actions">
+                <button class="menu-action" type="button" data-action="rename">Переименовать</button>
+                <button class="menu-action" type="button" data-action="password">Защитить паролем</button>
+                <button class="menu-action" type="button" data-action="duplicate">Дублировать</button>
+                <button class="menu-action danger" type="button" data-action="delete">Удалить</button>
+              </div>
+              <div class="card-badge badge-cloud"><i class="ri-cloud-line"></i></div>
+              <div class="card-info">
+                <h3 class="test-title">Информатика, параграф 1 - 3</h3>
+                <p class="test-meta"><i class="ri-info-card-line"></i> 654-321 | <i class="ri-user-line"></i> Me</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page="explore">
+          <div class="page-header">
+            <i class="ri-globe-line ri-xl"></i>
+            <h1>Обзор</h1>
+          </div>
+
+          <div class="page-body">
+            <div class="content-panel">
+              <p class="panel-label">Популярные темы</p>
+              <div class="chip-grid">
+                <span class="chip">Математика</span>
+                <span class="chip">Наука</span>
+                <span class="chip">Программирование</span>
+                <span class="chip">История</span>
+                <span class="chip">Языки</span>
+                <span class="chip">Бизнес</span>
+              </div>
+            </div>
+
+            <div class="content-panel list-panel">
+              <p class="panel-label">Популярные тесты</p>
+              <ul>
+                <li><span>Основы frontend</span><strong>2.1k</strong></li>
+                <li><span>Мировая история</span><strong>1.4k</strong></li>
+                <li><span>Основы физики</span><strong>860</strong></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page="cloud">
+          <div class="page-header">
+            <i class="ri-cloud-line ri-xl"></i>
+            <h1>Облако</h1>
+          </div>
+
+          <div class="page-body">
+            <div class="content-panel list-panel">
+              <p class="panel-label">Синхронизированные файлы</p>
+              <ul>
+                <li><span>Набор тестов JavaScript</span><strong>Синхронизировано</strong></li>
+                <li><span>Итоговый обзор по биологии</span><strong>В очереди</strong></li>
+                <li><span>Набор аудио по английскому</span><strong>Синхронизировано</strong></li>
+              </ul>
+            </div>
+
+            <div class="content-panel stat-panel">
+              <p class="panel-label">Память</p>
+              <div class="storage-meter">
+                <div class="storage-fill"></div>
+              </div>
+              <p class="storage-meta">Использовано 24% · 1.8 ГБ из 7.5 ГБ</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page="account">
+          <div class="page-header">
+            <i class="ri-user-line ri-xl"></i>
+            <h1>Аккаунт</h1>
+          </div>
+
+          <div class="page-body account-layout">
+            <div class="content-panel profile-card">
+              <div class="avatar">M</div>
+              <div>
+                <h3>Me</h3>
+                <p>me@neoquizzy.app</p>
+              </div>
+            </div>
+
+            <!-- <div class="content-panel list-panel">
+              <p class="panel-label">Profile</p>
+              <ul>
+                <li><span>Subscription</span><strong>Pro</strong></li>
+                <li><span>Country</span><strong>Russia</strong></li>
+                <li><span>Member since</span><strong>2026</strong></li>
+              </ul>
+            </div> -->
+            <div style="display: flex; flex-direction: column; gap: 6px; height: 100%;">
+              <button type="button" data-open-modal style="justify-content: start; padding: 12px;">
+                <i class="ri-loop-left-line ri-2x"></i>
+                <div style="margin-left: 12px; text-align: start;">
+                  <h3>Проверить обновления</h3>
+                  <p>Найти и установить последние обновления</p>
+                </div>
+              </button>
+              <button type="button" data-open-modal style="justify-content: start; padding: 12px;">
+                <i class="ri-information-line ri-2x"></i>
+                <div style="margin-left: 12px; text-align: start;">
+                  <h3>О программе</h3>
+                  <p>Показать информацию о программе, включая версию</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page="settings">
+          <div class="page-header">
+            <i class="ri-settings-3-line ri-xl"></i>
+            <h1>Настройки</h1>
+          </div>
+
+          <div class="page-body settings-grid">
+            <div class="content-panel settings-panel">
+              <div class="setting-row">
+                <span>Тёмная тема</span>
+                <button class="toggle on" type="button">Вкл</button>
+              </div>
+              <div class="setting-row">
+                <span>Автосинхронизация</span>
+                <button class="toggle on" type="button">Вкл</button>
+              </div>
+              <div class="setting-row">
+                <span>Уведомления</span>
+                <button class="toggle" type="button">Выкл</button>
+              </div>
+            </div>
+
+            <div class="content-panel list-panel">
+              <p class="panel-label">Система</p>
+              <ul>
+                <li><span>Язык</span><strong>Русский</strong></li>
+                <li><span>Тема</span><strong>Строгая тёмная</strong></li>
+                <li><span>Версия</span><strong>1.0.0</strong></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="window" id="app-modal" aria-hidden="true">
+      <div class="window-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="window-header">
+          <h2 class="window-title" id="modal-title">Информация</h2>
+          <!-- <button class="window-close icon" type="button" aria-label="Закрыть"><i class="ri-close-large-line ri-sm"></i></button> -->
+        </div>
+        <div class="window-body"></div>
+        <div class="window-actions"></div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- EDITOR -->
+    <div id="editor" class="editor" style="visibility: hidden; opacity: 0;">
+      <div class="card">
+        <button class="icon" onclick="hideEditor()">
+          <i class="ri-arrow-left-line ri-xl"></i>
+          Меню
+        </button>
+      </div>
+      <div id="editor-content" style="display: grid; grid-template-columns: 200px auto; height: auto; flex: 1;">
+        <div style="padding: 0 6px 6px 6px;">
+          <button class="accent option active" style="justify-content: start; padding: 12px; width: 100%;">
+            <i class="ri-information-line ri-xl"></i>
+            <div style="margin-left: 12px; text-align: start;">
+              <p style="color: #ffffff;">Метаданные</p>
+            </div>
+          </button>
+          <hr>
+          <button class="option" style="justify-content: start; padding: 12px; width: 100%;">
+            <i class="ri-question-line ri-xl"></i>
+            <div style="margin-left: 12px; text-align: start;">
+              <p style="color: #ffffff;">Вопрос 1</p>
+            </div>
+          </button>
+        </div>
+        <div style="background-color: #202020; padding: 6px;">Тут должны быть настройки для метаданных или вопросов</div>
+      </div>
+      <div class="card statusbar">
+        <p>Тут должны быть разные удобные фичи, например, кол-во вопросов в тесте</p>
+      </div>
+    </div>
+
+    <script src="nq-test.js"></script>
+    <script src="assets/marked/marked.umd.js"></script>
+    <script src="md-use.js"></script>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
