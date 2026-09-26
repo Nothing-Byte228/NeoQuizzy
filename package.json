@@ -9,7 +9,7 @@
     "dev": "electron ."
   },
   "devDependencies": {
-    "electron": "^44.4.3"
+    "electron": "^44.4.5"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.2",
