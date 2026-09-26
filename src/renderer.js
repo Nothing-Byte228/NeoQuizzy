@@ -319,9 +319,32 @@ function showUnavailableModal(function_name, type) {
   });
 }
 
-document.getElementById('editor-content').querySelectorAll('.option').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (btn.classList.contains('active')) btn.classList.remove('active');
-    btn.classList.add('active');
+async function renderQuestions() {
+  const test = await readTest();
+
+  for (question of test.tests) {
+    const questionList = document.querySelector('#editor-content #questions-list');
+
+    questionList.insertAdjacentHTML('beforeend', `
+      <button class="option" style="justify-content: start; padding: 12px; width: 100%;">
+        <i class="ri-question-line ri-xl"></i>
+        <div style="margin-left: 12px; text-align: start;">
+          <p style="color: #ffffff;">${question.text}</p>
+        </div>
+      </button>
+    `)
+  }
+
+  // Находим контейнер и все его опции
+  const options = document.getElementById('editor-content').querySelectorAll('.option');
+
+  options.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // 1. Сначала убираем класс active абсолютно у всех опций в этом списке
+      options.forEach(item => item.classList.remove('active'));
+      
+      // 2. И только текущей нажатой кнопке добавляем active
+      btn.classList.add('active');
+    });
   });
-});
+}

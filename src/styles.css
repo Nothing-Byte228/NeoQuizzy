@@ -18,6 +18,40 @@ body {
   width: 100vw;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
+
+  /* 1. Стили для современных браузеров (Firefox) */
+  scrollbar-width: thin;
+  scrollbar-color: #444444 #202020; /* цвет ползунка, цвет дорожки */
+
+  /* 2. Стили для WebKit-браузеров (Chrome, Safari, Edge, Opera) */
+  &::-webkit-scrollbar {
+    width: 8px; /* ширина вертикального скроллбара */
+    height: 8px; /* высота горизонтального (если появится) */
+  }
+
+  /* Дорожка, по которой двигается ползунок */
+  &::-webkit-scrollbar-track {
+    background: #202020; 
+    border-radius: 4px;
+  }
+
+  /* Сам ползунок (бегунок) */
+  &::-webkit-scrollbar-thumb {
+    background: #444444; 
+    border-radius: 4px;
+    border: 1px solid #202020; /* создает визуальный отступ */
+    transition: background 0.2s ease;
+  }
+
+  /* Эффект при наведении на ползунок */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555555; 
+  }
+
+  /* Эффект при активном клике/перетаскивании */
+  &::-webkit-scrollbar-thumb:active {
+    background: #0078d7; /* подсвечиваем фирменным синим цветом */
+  }
 }
 
 #app {
@@ -625,8 +659,8 @@ hr {
   display: flex;
   flex-direction: column;
   position: fixed;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -665,30 +699,62 @@ hr {
   border: 1px solid #444444;
 }
 
+/* ИСПРАВЛЕННЫЙ БЛОК */
 #editor-content {
+  /* ИСПРАВЛЕНО 1: Заставляем контейнер занимать всё свободное место в .editor */
+  flex: 1 1 0%; 
+  /* ИСПРАВЛЕНО 2: Сброс min-height критически важен в Chrome/Safari, 
+     чтобы флекс-элемент мог сжиматься и скроллиться внутри себя */
+  min-height: 0; 
+  
+  /* Если внутри #editor-content есть еще элементы помимо списка (например, заголовки), 
+     тоже можно сделать его флексом */
+  display: flex;
+  flex-direction: column;
+
+  #questions-list {
+    /* ИСПРАВЛЕНО 3: Явно указываем вертикальный скролл */
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+    
+    /* ИСПРАВЛЕНО 4: Вместо min-height заставляем список 
+       занять 100% высоты от уже ограниченного родителя */
+    height: 100%; 
+  }
+
   .option {
     border: none;
     border-left: 2px solid transparent;
     background-color: transparent;
+    cursor: pointer;
+    
+    /* ИСПРАВЛЕНО 5: Для корректной работы text-overflow, 
+       элемент должен быть блочным или флексовым */
+    display: flex; 
+    max-width: 250px; 
+    overflow: hidden; 
+
+    p {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      margin: 0; 
+    }
 
     &:hover {
       background-color: #202020;
       border-left: 2px solid #333333;
     }
 
-    &:active {
-      background-color: #1d1d1d;
-      border-left: 2px solid #2b2b2b;
+    &.active {
+      border-left: 2px solid #0078d7;
+      background-color: #333333;
+      cursor: auto;
     }
   }
-
-  .option.active {
-    border: none;
-    border-left: 2px solid #0078d7;
-    background-color: #333333;
-    cursor: auto;
-  }
 }
+
 
 /* Контейнер для текста */
 .markdown-body {

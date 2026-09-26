@@ -16,8 +16,7 @@ class NQTest {
     };
     this.manifest = {
       version: "1.0.0",
-      type: "nqt",
-      compression: "lzma" // Пометка в манифесте для истории
+      type: "nqt"
     };
   }
 
@@ -135,197 +134,30 @@ class NQTest {
   }
 }
 
-class EQXml {
-  /**
-   * Конвертирует строку easyQuizzy XML в массив вопросов для формата NQT
-   * @param {string} xmlString - Содержимое .xml файла от easyQuizzy
-   */
-  static toNqt(xmlString) {
-    try {
-      const parser = new XMLParser({
-        ignoreAttributes: false,
-        attributeNamePrefix: "@_"
-      });
-      
-      const jsonObj = parser.parse(xmlString);
-      const fileRoot = jsonObj.easyQuizzyFile || {};
-      
-      // Извлекаем метаданные из GlobalSettings
-      const settings = fileRoot.GlobalSettings || {};
-      const meta = {
-        title: settings.Name || "Импортированный тест",
-        author: settings.Author || "Неизвестный автор",
-        description: settings.Description?.PlainText || "",
-        createdAt: settings.DateOfCreation || new Date().toISOString()
-      };
-
-      const tests = [];
-      
-      // Пробиваемся сквозь вложенность оригинального XML к вопросам
-      const subjectNode = fileRoot.Subjects?.Subject || {};
-      const rawQuestions = subjectNode.Questions?.QuestionBlock || [];
-      const questionsArray = Array.isArray(rawQuestions) ? rawQuestions : [rawQuestions];
-
-      questionsArray.forEach((q, index) => {
-        const rawAnswers = q.Answers?.Answer || [];
-        const answersArray = Array.isArray(rawAnswers) ? rawAnswers : [rawAnswers];
-
-        const options = [];
-        let correctIndex = 0;
-
-        answersArray.forEach((ans, ansIndex) => {
-          const text = ans.Content?.PlainText || "";
-          options.push(String(text).trim());
-
-          // В оригинале признак правильности лежит в атрибуте IsCorrect
-          if (ans["@_IsCorrect"] === "Yes") {
-            correctIndex = ansIndex;
-          }
-        });
-
-        tests.push({
-          id: index,
-          text: String(q.Content?.PlainText || "").trim(),
-          options: options,
-          correct: correctIndex,
-          points: 1
-        });
-      });
-
-      return { meta, tests };
-    } catch (error) {
-      console.error('[EQXml] Ошибка при конвертации XML -> NQT:', error);
-      return null;
-    }
-  }
-
-  /**
-   * Конвертирует массив вопросов NQT обратно в оригинальный формат easyQuizzy XML
-   */
-  static fromNqt(meta, testsArray = []) {
-    try {
-      const builder = new XMLBuilder({
-        format: true,
-        ignoreAttributes: false,
-        attributeNamePrefix: "@_",
-        // Включаем встроенную поддержку самозакрывающихся тегов для пустых узлов
-        suppressEmptyNode: true 
-      });
-
-      const safeMeta = meta || {};
-      const currentTime = new Date().toISOString().replace(/\.\d+Z\$/, '+00:00');
-
-      // Формируем структуру XML, заменяя пустые строки на null, 
-      // чтобы suppressEmptyNode превратил их в самозакрывающиеся теги <Tag/>
-      const xmlStructure = {
-        easyQuizzyFile: {
-          SubjectTypes: {
-            "@_count": "2",
-            SubjectType: [
-              { "@_id": "0", "@_name": "Examination", "@_description": "" },
-              { "@_id": "1", "@_name": "Practice", "@_description": "" }
-            ]
-          },
-          QuestionTypes: {
-            "@_count": "6",
-            QuestionType: [
-              { "@_id": "0", "@_name": "MultipleChoice", "@_description": "Select a single answer from a list", "#text": "Multiple Choice" },
-              { "@_id": "1", "@_name": "MultipleResponse", "@_description": "Select one or more answers from a list", "#text": "Multiple Response" },
-              { "@_id": "2", "@_name": "ShortAnswer", "@_description": "User must enter an answer from the keyboard", "#text": "Short Answer" },
-              { "@_id": "3", "@_name": "PolarQuestion", "@_description": "Select a single answer from two available", "#text": "Polar Question" },
-              { "@_id": "4", "@_name": "Sequence", "@_description": "Sort the answer list into the appropriate order", "#text": "Sequence" },
-              { "@_id": "5", "@_name": "Matching", "@_description": "Join an item from each list with a similar meaning", "#text": "Matching" }
-            ]
-          },
-          GlobalSettings: {
-            Name: safeMeta.title || "Новый тест",
-            Description: {
-              PlainText: safeMeta.description || "",
-              Empty: safeMeta.description ? "No" : "Yes",
-              RichViewFormatBASE64: "LTggMSAzIDENCjAgMSAwIDggMCAwDQoxADIAMwApIA=="
-            },
-            Author: safeMeta.author || "Nothing-Byte228",
-            DateOfCreation: safeMeta.createdAt || currentTime,
-            DateLastChange: currentTime,
-            GeneratorBuild: "442",
-            UILangISOName: "rus",
-            // ИСПРАВЛЕНО: Передаем null, чтобы fast-xml-parser сделал теги самозакрывающимися
-            PasswordHash: null,
-            PasswordHint: null,
-            TextStyleBASE64: "57314E306557786C6331304E436B6C545A57784462327876636A30314D7A59344E7A41354D54454E436B6C545A5778555A58683051323973623349394E544D324F4463774F544578445170510D0A59584A6863304E766457353050544D4E436C4268636D465464486C735A5535686257557750554673615764755447566D6441304B5547467959564E306557786C546D46745A544539515778700D0A5A3235445A5735305A58494E436C4268636D464262476C6E626D316C626E51785054494E436C4268636D465464486C735A553568625755795055467361576475556D6C6E6148514E436C42680D0A636D464262476C6E626D316C626E51795054454E436B5A76626E527A51323931626E51394E41304B526D397564464E306557786C546D46745A544139546D3979625746734948526C6548514E0D0A436B5A76626E524F5957316C4D4431545A5764765A5342565351304B526D3975644570316258417750553576445170476232353055326C365A5441394D74code..."
-          },
-          Subjects: {
-            "@_count": "1",
-            Subject: {
-              "@_id": "0",
-              SubjectSettings: {
-                Name: null, // Также делаем самозакрывающимся, если он пуст в оригинале
-                Description: { PlainText: null, Empty: "Yes" },
-                Author: null,
-                DateOfCreation: safeMeta.createdAt || currentTime,
-                DateLastChange: currentTime,
-                SubjectTypeName: "Examination",
-                QuestionsToAsk: null,
-                RandomizeQuestions: "Yes",
-                RandomizeAnswers: "Yes",
-                GradeSystem: { "@_name": "Total Score" },
-                TimeIsLimited: "No",
-                TimeLimit: "00:45:00",
-                SecondsToHoldResultsOnScreen: null,
-                FontName: "Arial",
-                FontSize: "12",
-                EnableQAReport: "Yes",
-                QAReportShowRightAnsweredQuestions: "Yes",
-                QAReportShowWrongAnsweredQuestions: "Yes",
-                QAReportShowQuestionsWithoutAnswers: "No",
-                QAReportShowUserAnswers: "Yes",
-                QAReportShowRightAnswers: "No"
-              },
-              Questions: {
-                "@_count": String(testsArray.length),
-                QuestionBlock: testsArray.map((q, idx) => ({
-                  "@_id": String(idx),
-                  QuestionTypeName: "MultipleChoice",
-                  Content: {
-                    PlainText: q.text || "",
-                    Empty: q.text ? "No" : "Yes",
-                    RichViewFormatBASE64: "LTggMSAzIDENCjAgMSAwIDggMCAwDQoxADIAMwApIA=="
-                  },
-                  Answers: {
-                    "@_count": String(q.options.length),
-                    Answer: q.options.map((opt, optIdx) => ({
-                      "@_IsCorrect": optIdx === q.correct ? "Yes" : "No",
-                      "@_Weight": "0",
-                      "@_id": String(optIdx),
-                      Content: {
-                        PlainText: opt,
-                        Empty: opt ? "No" : "Yes",
-                        RichViewFormatBASE64: "LTggMSAzIDENCjAgMSAwIDggMCAwDQoxACkg"
-                      }
-                    }))
-                  }
-                }))
-              }
-            }
-          }
-        }
-      };
-
-      const rawXml = builder.build(xmlStructure);
-      return `<?xml version="1.0" encoding="UTF-8"?>\n${rawXml}`.trim();
-    } catch (error) {
-      console.error('[EQXml] Ошибка при генерации XML:', error);
-      return '';
-    }
-  }
-}
-
 module.exports = {
-  NQTest,
-  EQXml
+  NQTest
 }
 
-async function test() {
-  const a = await NQTest.load(path.join('src', 'trigonometry_ENCRYPTED_LZMA.nqt'), 'password')
-  return EQXml.fromNqt(a.meta, a.tests)
+async function createTest(password = null) {
+  const test = new NQTest();
+
+  let questions = []
+
+  for (let i = 0; i <= 300; i++) {
+    questions.push({
+      text: `Вопрос номер ${i+1}`,
+      answers: [
+        { label: 'Ответ 1', isCorrect: false },
+        { label: 'Ответ 2', isCorrect: false },
+        { label: 'Ответ 3', isCorrect: true },
+        { label: 'Ответ 4', isCorrect: false }
+      ]
+    })
+  }
+
+  await test.build(path.join('.', 'test.nqt'), questions, password);
+}
+
+async function readTest(password = null) {
+  return await NQTest.load(path.join('.', 'test.nqt'), password)
 }

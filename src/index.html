@@ -267,7 +267,7 @@
         </button>
       </div>
       <div id="editor-content" style="display: grid; grid-template-columns: 200px auto; height: auto; flex: 1;">
-        <div style="padding: 0 6px 6px 6px;">
+        <div id="questions-list" style="padding: 0 6px 6px 6px;">
           <button class="accent option active" style="justify-content: start; padding: 12px; width: 100%;">
             <i class="ri-information-line ri-xl"></i>
             <div style="margin-left: 12px; text-align: start;">
@@ -275,12 +275,6 @@
             </div>
           </button>
           <hr>
-          <button class="option" style="justify-content: start; padding: 12px; width: 100%;">
-            <i class="ri-question-line ri-xl"></i>
-            <div style="margin-left: 12px; text-align: start;">
-              <p style="color: #ffffff;">Вопрос 1</p>
-            </div>
-          </button>
         </div>
         <div style="background-color: #202020; padding: 6px;">Тут должны быть настройки для метаданных или вопросов</div>
       </div>
@@ -293,5 +287,9 @@
     <script src="assets/marked/marked.umd.js"></script>
     <script src="md-use.js"></script>
     <script src="./renderer.js"></script>
+
+    <script>
+      renderQuestions();
+    </script>
   </body>
 </html>
